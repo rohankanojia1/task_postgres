@@ -40,9 +40,16 @@ router.post('/toggle/active',async (req,res) => {
 })
 
 router.get('/login',async (req,res) => {
-    let user = await findByCredentials({email: req.body.email,password: req.body.password})
-    user = await generateAuthToken(user)
-    return res.send(user)
+    try{
+        let user = await findByCredentials({email: req.body.email,password: req.body.password})
+        user = await generateAuthToken(user)
+        return res.send(user)
+    }
+    catch(e){
+        console.log(e)
+        res.send({"status": "unsuccess", "error": "Something went wrong."})
+    }
+    
 })
 
 
