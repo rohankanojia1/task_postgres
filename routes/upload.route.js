@@ -1,5 +1,6 @@
 const express = require('express')
-const { executeQuery } = require('../util')
+const moment = require('moment')
+const { executeQuery, update } = require('../util')
 const fs = require('fs')
 const router = new express.Router()
 
@@ -7,14 +8,16 @@ router.post('/upload', async (req,res) => {
     try{
         const result = (await executeQuery(`SELECT * FROM user_master WHERE email=$1`,[req.body.email])).rows[0]
         const file = req.files.file
-        if(result.upload_limit != 'unlimited' && file.size < result.upload_limit){
-            fs.writeFile(`uploads/${result.email}`, file.data, (err) => {
+        if(result.upload_limit != 'unlimited' && file.size/1024 < result.upload_limit){
+            fs.writeFile(`uploads/${result.email}`, file.data, async (err) => {
                 if(err) throw err;
+                await update({filesize: file.size/1024, updated_on: moment().format('LLL')},'user_master',{email: req.body.email})
                 res.send({"status":"success", "msg": "File uploaded"})
             })
         }else if(result.upload_limit == 'unlimited'){
-            fs.writeFile(`uploads/${result.email}`, file.data, (err) => {
+            fs.writeFile(`uploads/${result.email}`, file.data, async (err) => {
                 if(err) throw err;
+                await update({filesize: file.size/1000, updated_on: moment().format('LLL')},'user_master',{email: req.body.email})
                 res.send({"status":"success", "msg": "File uploaded"})
             })
         }else{
