@@ -45,6 +45,7 @@ upload_btn.addEventListener('click',(e) => {
 role_btn.addEventListener('click',async (e) => {
     e.preventDefault()
     let users = await fetchUsers()
+    deleteChild()
     await createUsersEl(users)
     form_action = '/toggle/active'
     reg_form.style.display = 'none'
@@ -119,4 +120,13 @@ async function createUsersEl(users){
         user_el.innerHTML = user.name
         select.appendChild(user_el)
     })
+}
+
+function deleteChild() { 
+    let select = document.getElementById('user_list')
+    var child = select.lastElementChild;  
+    while (child) { 
+        select.removeChild(child); 
+        child = select.lastElementChild; 
+    } 
 }
