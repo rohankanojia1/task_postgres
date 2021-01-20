@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" />
+    <title>Index</title>
+</head>
+<body>
+    <div class="ui container" style="margin: 50px;">
+        <div class="switch">
+            <button class="ui button" id="register">Register</button>
+            <button class="ui button" id="login">Login</button>
+            <button class="ui button" id="file_upload">Upload</button>
+            <button class="ui button" id="toggle_role">Toggle</button>
+        </div>
+        <h3 class="ui dividing header"></h3>
+        <div id="register_form" style="display: block;">
+            <h3 class="ui dividing header">Register</h3>
+            <form class="ui form" id="reg_form_el">
+                <div class="field">
+                    <label>Name:</label>
+                    <input type="text" name="name">
+                </div>
+    
+                <div class="field">
+                    <label>Email:</label>
+                    <input type="text" name="email">
+                </div>
+    
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" name="password">
+                </div>
+                
+                <div class="field">
+                    <label>Role</label>
+                    <select name="role" class="ui fluid dropdown">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button id="reg_btn" type="submit" class="ui button primary">Register</button>
+            </form>
+        </div>
+
+        <div id="login_form" style="display: none;">
+            <h3 class="ui dividing header">Login</h3>
+            <form id="login_form_el" class="ui form">
+                <div class="field">
+                    <label>Email:</label>
+                    <input type="text" name="email">
+                </div>
+    
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" name="password">
+                </div>
+                <button id="login_btn" type="submit" class="ui button primary">Login</button>
+            </form>
+        </div>
+
+        <div id="upload_form" style="display: none;">
+            <h3 class="ui dividing header">Upload File</h3>
+        <form id="upload_form_el" class="ui form">
+            <div class="field">
+                <label for="avatar">Select a file:</label>
+                <input type="file" id="file" name="file">
+            </div>
+            <button id="upload_btn" type="submit" class="ui button primary">Upload</button>
+        </form>
+        </div>
+
+        <div id="role_form" style="display: none;">
+            <h3 class="ui dividing header">Select Activity</h3>
+            <form id="role_form_el" class="ui form">
+                <div class="field">
+                    <label>User</label>
+                    <select id="user_list" name="email" class="ui fluid dropdown">
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Active</label>
+                    <select name="is_active" class="ui fluid dropdown">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>    
+                </div>
+                <button id="role_btn" type="submit" class="ui button primary" style="margin-top: 20px;">Toggle Role</button>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>

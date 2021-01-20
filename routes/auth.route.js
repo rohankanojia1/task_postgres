@@ -1,5 +1,5 @@
 const express = require('express')
-const { insert, executeQuery,findByCredentials, generateAuthToken } = require('../util')
+const { insert, executeQuery,findByCredentials, generateAuthToken, validateCookie } = require('../util')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const router = new express.Router()
@@ -22,10 +22,11 @@ router.post('/register',async (req,res) => {
     }
 })
 
-router.post('/toggle/active',async (req,res) => {
+router.post('/toggle/active', validateCookie, async (req,res) => {
     try{
+        if(!(req.user.role == 'admin')) return res.send({ "status": "unsuccess", "error": "Only admin can change user activity." })
         let result = await executeQuery(`SELECT * FROM user_master WHERE email=$1`,[req.body.email])
-        if(!result.rows[0].is_active){
+        if(req.body.is_active == '1'){
             result = await executeQuery(`UPDATE user_master SET is_active=$1, upload_limit='unlimited',updated_on=$2 where email=$3`,[1, moment().format('LLL'), req.body.email])
             res.send({"status": "success", "msg": `${req.body.email} is now active` })
         }else{
@@ -39,11 +40,12 @@ router.post('/toggle/active',async (req,res) => {
     }
 })
 
-router.get('/login',async (req,res) => {
+router.post('/login', async (req,res) => {
     try{
         let user = await findByCredentials({email: req.body.email,password: req.body.password})
         user = await generateAuthToken(user)
-        return res.send(user)
+        res.cookie('user_token',user.token)
+        return res.send({"status": "success", "msg": "Logged In"})
     }
     catch(e){
         console.log(e)
@@ -52,5 +54,20 @@ router.get('/login',async (req,res) => {
     
 })
 
+router.get('/users',validateCookie, async (req,res) => {
+    try{
+        let users = (await executeQuery(`SELECT id,name,email FROM user_master`)).rows
+        res.send(JSON.stringify(users))
+    }
+    catch(e){
+        console.log(e)
+        res.send({"status": "unsuccess", "error": "Something went wrong."})
+    }
+
+})
+
+router.get('/',async(req,res) => {
+    res.render('index')
+})
 
 module.exports = router

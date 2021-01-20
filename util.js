@@ -16,7 +16,6 @@ const utility = {
         const client = new Client(credentails)
         client.connect()
         .then(() => console.log('Connected to db'))
-        .then(() => client.query('SELECT * FROM USER_MASTER'))
         .catch(e => console.log('\nSomething went wrong\n',e))
         .finally(() => {
             client.end()
@@ -69,8 +68,19 @@ const utility = {
         let result = await utility.executeQuery(qry_1+qry_2, bind)
         return result
     },
-    auth: async (req,res,next) => {
-        
+    validateCookie: async (req,res,next) => {
+        try{
+            const token = req.cookies['user_token']
+            const decoded = jwt.verify(token,'jwt_key')
+            const user = (await utility.executeQuery('SELECT * FROM user_master WHERE id=$1 AND token=$2',[decoded.id,token])).rows[0]
+            req.token = token
+            req.user = user
+            next()    
+        }
+        catch(e){
+            console.log(e)
+            res.send({"status": "unsuccess", "msg": "Authentication failed"})
+        }
     },
     findByCredentials: async ({ email, password }) => {
         const user = (await utility.executeQuery('SELECT * FROM user_master WHERE email=$1',[email])).rows[0]

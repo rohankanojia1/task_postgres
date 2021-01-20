@@ -1,12 +1,12 @@
 const express = require('express')
 const moment = require('moment')
-const { executeQuery, update } = require('../util')
+const { executeQuery, update, validateCookie } = require('../util')
 const fs = require('fs')
 const router = new express.Router()
 
-router.post('/upload', async (req,res) => {
+router.post('/upload', validateCookie, async (req,res) => {
     try{
-        const result = (await executeQuery(`SELECT * FROM user_master WHERE email=$1`,[req.body.email])).rows[0]
+        const result = (await executeQuery(`SELECT * FROM user_master WHERE email=$1`,[req.user.email])).rows[0]
         const file = req.files.file
         if(result.upload_limit != 'unlimited' && file.size/1024 < result.upload_limit){
             fs.writeFile(`uploads/${result.email}`, file.data, async (err) => {
