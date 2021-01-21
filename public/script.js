@@ -45,6 +45,7 @@ upload_btn.addEventListener('click',(e) => {
 role_btn.addEventListener('click',async (e) => {
     e.preventDefault()
     let users = await fetchUsers()
+    if(users.error) return alert(users.error)
     deleteChild()
     await createUsersEl(users)
     form_action = '/toggle/active'

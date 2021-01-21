@@ -79,7 +79,7 @@ const utility = {
         }
         catch(e){
             console.log(e)
-            res.send({"status": "unsuccess", "msg": "Authentication failed"})
+            res.send({"status": "unsuccess", "error": "Authentication failed"})
         }
     },
     findByCredentials: async ({ email, password }) => {
