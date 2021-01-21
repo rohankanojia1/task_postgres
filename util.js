@@ -53,10 +53,6 @@ const utility = {
         let qry_1 = `UPDATE ${tablename} SET `
         let qry_2 = `WHERE `
         for(let i = 0; i<values.length; i++){
-            if(filterValues[i]){
-                qry_2 += `${filterValues[i]}=$${values.length+i+1} `
-                bind[values.length+i]=filter[filterValues[i]]
-            }
             if(i == values.length-1){
                 qry_1 += `${values[i]}=$${i+1} `
             }
@@ -64,6 +60,13 @@ const utility = {
                 qry_1 += `${values[i]}=$${i+1}, `
             }
             bind[i]=Obj[values[i]]
+        }
+        for(let i = 0; i<filterValues.length; i++){
+            if(filterValues[i]){
+                qry_2 += `${filterValues[i]}=$${values.length+i+1} `
+                if(i != filterValues.length-1) qry_2 += 'AND '
+                bind[values.length+i]=filter[filterValues[i]]
+            }
         }
         let result = await utility.executeQuery(qry_1+qry_2, bind)
         return result

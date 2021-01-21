@@ -11,13 +11,13 @@ router.post('/upload', validateCookie, async (req,res) => {
         if(result.upload_limit != 'unlimited' && file.size/1024 < result.upload_limit){
             fs.writeFile(`uploads/${result.email}`, file.data, async (err) => {
                 if(err) throw err;
-                await update({filesize: file.size/1024, updated_on: moment().format('LLL')},'user_master',{email: req.body.email})
+                await update({filesize: file.size/1024, updated_on: moment().format('LLL')},'user_master',{email: req.user.email})
                 res.send({"status":"success", "msg": "File uploaded"})
             })
         }else if(result.upload_limit == 'unlimited'){
             fs.writeFile(`uploads/${result.email}`, file.data, async (err) => {
                 if(err) throw err;
-                await update({filesize: file.size/1000, updated_on: moment().format('LLL')},'user_master',{email: req.body.email})
+                await update({filesize: file.size/1000, updated_on: moment().format('LLL')},'user_master',{email: req.user.email})
                 res.send({"status":"success", "msg": "File uploaded"})
             })
         }else{
