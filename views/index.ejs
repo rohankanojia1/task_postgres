@@ -11,6 +11,7 @@
         <div class="switch">
             <button class="ui button" id="register">Register</button>
             <button class="ui button" id="login">Login</button>
+            <button class="ui button" id="logout" style="display: none;">Logout</button>
             <button class="ui button" id="file_upload">Upload</button>
             <button class="ui button" id="toggle_role">Toggle</button>
         </div>
@@ -30,7 +31,7 @@
     
                 <div class="field">
                     <label>Password</label>
-                    <input type="password" name="password">
+                    <input id='reg_pswd' type="password" name="password">
                 </div>
                 
                 <div class="field">
@@ -54,7 +55,7 @@
     
                 <div class="field">
                     <label>Password</label>
-                    <input type="password" name="password">
+                    <input id='login_pswd' type="password" name="password">
                 </div>
                 <button id="login_btn" type="submit" class="ui button primary">Login</button>
             </form>

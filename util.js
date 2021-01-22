@@ -76,12 +76,13 @@ const utility = {
             const token = req.cookies['user_token']
             const decoded = jwt.verify(token,'jwt_key')
             const user = (await utility.executeQuery('SELECT * FROM user_master WHERE id=$1 AND token=$2',[decoded.id,token])).rows[0]
+            if(!user)return res.send({"status": "unsuccess", "error": "Authentication failed"})
             req.token = token
             req.user = user
             next()    
         }
         catch(e){
-            console.log(e)
+            console.log('Authentication Failed')
             res.send({"status": "unsuccess", "error": "Authentication failed"})
         }
     },

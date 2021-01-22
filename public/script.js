@@ -2,6 +2,7 @@ let reg_btn = document.getElementById('register')
 let login_btn = document.getElementById('login')
 let upload_btn = document.getElementById('file_upload')
 let role_btn = document.getElementById('toggle_role')
+let logout_btn = document.getElementById('logout')
 
 let reg_form = document.getElementById('register_form')
 let login_form = document.getElementById('login_form')
@@ -55,6 +56,18 @@ role_btn.addEventListener('click',async (e) => {
     role_form.style.display = 'block'
 })
 
+    
+logout_btn.addEventListener('click', (e) => {
+    e.preventDefault()
+    logout_btn.style.display = 'none'
+    form_action = '/register'
+    reg_form.style.display = 'block'
+    login_form.style.display = 'none'
+    upload_form.style.display = 'none'
+    role_form.style.display = 'none'
+    fetch('/logout')
+})
+
 reg_form_el.onsubmit = async (e) => {
     e.preventDefault()
     document.cookie = ''
@@ -62,6 +75,7 @@ reg_form_el.onsubmit = async (e) => {
         method: 'POST',
         body: new FormData(reg_form_el)
     })
+    document.getElementById('reg_pswd').value = ''
     let result = await response.json()
     if(result.error) alert(result.error)
     else{
@@ -75,9 +89,11 @@ login_form_el.onsubmit = async (e) => {
         method: 'POST',
         body: new FormData(login_form_el)
     })
+    document.getElementById('login_pswd').value = ''
     let result = await response.json()
     if(result.error) alert(result.error)
     else{
+        logout_btn.style.display = 'inline-block'
         alert(result.msg)
     } 
 }
@@ -130,4 +146,10 @@ function deleteChild() {
         select.removeChild(child); 
         child = select.lastElementChild; 
     } 
+}
+
+if(logout_btn.style.display == 'none'){
+    fetch('/logout').then(() => {
+        document.cookie = 'user_token' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    })
 }

@@ -1,5 +1,5 @@
 const express = require('express')
-const { insert, executeQuery,findByCredentials, generateAuthToken, validateCookie } = require('../util')
+const { insert, executeQuery,findByCredentials, generateAuthToken, validateCookie, update } = require('../util')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const router = new express.Router()
@@ -68,6 +68,16 @@ router.get('/users',validateCookie, async (req,res) => {
 
 router.get('/',async(req,res) => {
     res.render('index')
+})
+
+router.get('/logout',validateCookie,async (req,res) => {
+    try{
+        await update({ token: 'NULL' },'user_master', { email: req.user.email })    
+    }
+    catch(e){
+        console.log(e)
+        res.send({ "status": "success", "msg": "Logged Out" })
+    }
 })
 
 module.exports = router
